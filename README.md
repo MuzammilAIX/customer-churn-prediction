@@ -1,66 +1,183 @@
-# Customer Churn Prediction
+#  Customer Churn Prediction
 
-A production-style machine learning project for predicting telecommunications customer churn.
+> An end-to-end Machine Learning project that predicts whether a telecom customer is likely to churn.
 
-## What this project demonstrates
+##  Overview
 
-- Data cleaning
-- Train/test splitting with stratification
-- Missing-value handling
-- Numeric scaling
-- One-hot encoding
-- Class-imbalance handling
-- Logistic Regression baseline
-- Random Forest
-- XGBoost
-- Cross-validation
-- Random Forest GridSearchCV
-- ROC-AUC, precision, recall, F1 and accuracy
-- Threshold analysis
-- Feature importance
-- SHAP explainability
-- Model persistence with Joblib
-- Streamlit deployment
+This project uses customer demographics, services, contracts, and billing information to identify customers who are at risk of leaving a telecom company.
 
-## Standard ML project workflow
+###  Machine Learning Models
 
-Business Problem → Data Understanding → Data Cleaning → EDA → Train/Test Split → Preprocessing → Baseline → Model Comparison → Cross Validation → Hyperparameter Tuning → Evaluation → Threshold Analysis → Explainability → Save Model → Deployment
+* Logistic Regression
+* Random Forest
+* XGBoost
 
-## Setup on Windows
+###  Model Performance
+
+| Model               |    ROC-AUC |   F1 Score |  Precision |     Recall |
+| ------------------- | ---------: | ---------: | ---------: | ---------: |
+| Logistic Regression |     0.8377 |     0.6151 |     0.5023 |     0.7932 |
+| **Random Forest**   | **0.8353** | **0.6265** | **0.5200** | **0.7879** |
+| XGBoost             |     0.8359 |     0.6199 |     0.5147 |     0.7790 |
+
+**Selected Model:** Random Forest
+
+##  Project Architecture
+
+```text
+                    ┌──────────────────────┐
+                    │   Telco Churn Data   │
+                    │        (CSV)         │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │    Data Cleaning     │
+                    │  Missing Values      │
+                    │  Feature Preparation │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   Preprocessing      │
+                    │                      │
+                    │  Numerical Features  │
+                    │  → Imputation        │
+                    │  → Scaling           │
+                    │                      │
+                    │  Categorical         │
+                    │  → Imputation        │
+                    │  → One-Hot Encoding  │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+              ┌─────────────────────────────────┐
+              │       Machine Learning          │
+              │                                 │
+              │  Logistic Regression            │
+              │  Random Forest                  │
+              │  XGBoost                        │
+              └───────────────┬─────────────────┘
+                              │
+                              ▼
+                    ┌──────────────────────┐
+                    │   Model Evaluation   │
+                    │                      │
+                    │ ROC-AUC • F1         │
+                    │ Precision • Recall   │
+                    │ Confusion Matrix     │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   Model Selection    │
+                    │    Random Forest     │
+                    └──────────┬───────────┘
+                               │
+                    ┌──────────┴──────────┐
+                    ▼                     ▼
+          ┌──────────────────┐   ┌──────────────────┐
+          │  SHAP & Feature  │   │    Streamlit     │
+          │    Importance    │   │   Web Dashboard  │
+          └──────────────────┘   └────────┬─────────┘
+                                          │
+                                          ▼
+                               ┌──────────────────────┐
+                               │ Churn Probability &  │
+                               │ Business Insights    │
+                               └──────────────────────┘
+```
+
+##  Tech Stack
+
+`Python` `Pandas` `NumPy` `Scikit-learn` `XGBoost` `Matplotlib` `Seaborn` `SHAP` `Streamlit`
+
+##  Features
+
+*  Customer churn prediction
+*  Churn probability estimation
+*  Multiple ML model comparison
+*  Feature importance analysis
+*  SHAP model explanations
+*  Interactive Streamlit dashboard
+*  Class imbalance handling
+*  Probability threshold analysis
+*  Cross-validation and hyperparameter tuning
+
+##  Project Structure
+
+```text
+customer-churn-prediction/
+│
+├── app/
+│   └── app.py                    # Streamlit application
+│
+├── data/
+│   └── raw/                      # Raw dataset
+│
+├── models/                       # Trained models
+│
+├── notebooks/
+│   └── customer_churn_analysis.ipynb
+│
+├── reports/                      # Evaluation results
+│
+├── src/
+│   ├── __init__.py
+│   ├── preprocessing.py          # Data preprocessing
+│   ├── train.py                  # Model training
+│   └── predict.py                # Prediction logic
+│
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+##  Installation
+
+```bash
+git clone https://github.com/MuzammilAIX/customer-churn-prediction.git
+cd customer-churn-prediction
+python -m venv .venv
+```
+
+### Windows
 
 ```powershell
-py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-Put the dataset here:
+Download the [IBM Telco Customer Churn dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn) and place `Telco_Customer_Churn.csv` inside:
 
 ```text
-data/raw/Telco_Customer_Churn.csv
+data/raw/
 ```
 
-Train everything:
+##  Run
 
-```powershell
+### Train Models
+
+```bash
 python -m src.train
 ```
 
-Run the app:
+### Launch Streamlit App
 
-```powershell
-streamlit run app/app.py
+```bash
+python -m streamlit run app/app.py
 ```
 
-The training process creates:
+##  Business Goal
 
-```text
-models/logistic_model.pkl
-models/rf_model.pkl
-models/xgb_model.pkl
-reports/metrics.json
-reports/feature_importance.csv
-reports/threshold_analysis.csv
-```
+Identify customers with a high probability of churn so businesses can take proactive retention actions and reduce customer loss.
 
-Do not commit the dataset or trained model binaries to GitHub unless appropriate for your project/license.
+##  Author
+
+**Muzammil AIX**
+
+[![GitHub](https://img.shields.io/badge/GitHub-MuzammilAIX-black?logo=github)](https://github.com/MuzammilAIX)
+
+---
+
+⭐ If you find this project useful, consider giving it a star!
